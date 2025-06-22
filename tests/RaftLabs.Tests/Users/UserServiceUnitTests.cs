@@ -14,9 +14,9 @@ using RaftLabs.Infrastructure.Services;
 namespace RaftLabs.Tests.Users
 {
     /// <summary>
-    /// Unit tests for the ExternalUserService which validates caching, API interactions and AutoMapper configuration.
+    /// Unit tests for the UserService which validates caching, API interactions and AutoMapper configuration.
     /// </summary>
-    public class ExternalUserServiceUnitTests
+    public class UserServiceUnitTests
     {
         private readonly Mock<IExternalApiClient> _externalApiClientMock;
         private readonly Mock<ILogger<UserService>> _loggerMock;
@@ -32,7 +32,7 @@ namespace RaftLabs.Tests.Users
         /// <summary>
         /// Constructor that initializes mocks, mapper and the UserService under test.
         /// </summary>
-        public ExternalUserServiceUnitTests()
+        public UserServiceUnitTests()
         {
             _externalApiClientMock = new Mock<IExternalApiClient>();
             _loggerMock = new Mock<ILogger<UserService>>();

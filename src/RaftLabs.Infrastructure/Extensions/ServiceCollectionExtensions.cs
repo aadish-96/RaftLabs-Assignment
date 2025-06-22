@@ -24,7 +24,9 @@ namespace RaftLabs.Infrastructure.Extensions
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             // Configure strongly typed settings
-            services.Configure<ExternalApiSettings>(configuration.GetSection("ExternalApiSettings"));
+            services
+            .Configure<ExternalApiSettings>(configuration.GetSection(nameof(ExternalApiSettings)))
+            .Configure<HttpResilienceSettings>(configuration.GetSection(nameof(HttpResilienceSettings)));
 
             // Register memory cache
             services.AddMemoryCache();
@@ -33,7 +35,7 @@ namespace RaftLabs.Infrastructure.Extensions
             services.AddAutoMapper(typeof(MappingProfile));
 
             // Register HttpClient with retry and circuit breaker
-            services.AddHttpClient<IExternalApiClient, ExternalApiClient>().AddHttpPolicyHandlers();
+            services.AddHttpClient<IExternalApiClient, ExternalApiClient>().AddHttpPolicyHandlers(configuration);
 
             // Register domain services
             services.AddScoped<IUserService, UserService>();
