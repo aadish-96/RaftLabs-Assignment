@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RaftLabs.ConsoleApp": {
+      "commandName": "Project",
+      "commandLineArgs": "0"
+    }
+  }
+}
