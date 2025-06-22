@@ -3,17 +3,15 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RaftLabs.Domain.Interfaces;
 using RaftLabs.Domain.Models;
-using RaftLabs.Infrastructure.Configuration;
 using System.Text.Json;
 
 namespace RaftLabs.ConsoleApp.Demo
 {
-    public class LaunchDemo(string[] args, ILogger<LaunchDemo> logger, IUserService userService, IOptions<ExternalApiSettings> externalApiSettings, IOptions<JsonSerializerOptions> jsonSerializerOptions) : IHostedService
+    public class LaunchDemo(string[] args, ILogger<LaunchDemo> logger, IUserService userService, IOptions<JsonSerializerOptions> jsonSerializerOptions) : IHostedService
     {
         private readonly string[] _args = args;
         private readonly ILogger<LaunchDemo> _logger = logger;
         private readonly IUserService _userService = userService;
-        private readonly IOptions<ExternalApiSettings> externalApiSettings = externalApiSettings;
         private readonly IOptions<JsonSerializerOptions> _jsonSerializerOptions = jsonSerializerOptions;
 
         public async Task StartAsync(CancellationToken cancellationToken)
