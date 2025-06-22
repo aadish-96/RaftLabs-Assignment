@@ -74,10 +74,6 @@ Found in `RaftLabs.ConsoleApp/appsettings.json`:
 }
 ```
 
-- `ExternalApiSettings`: API base URL and custom headers.
-- `HttpResilienceSettings`: Controls retry logic, circuit breaker, and timeout.
-- Bound via `IOptions<T>` into typed configuration classes.
-
 ---
 
 ## 🛠️ Build & Run
@@ -92,15 +88,13 @@ dotnet restore
 dotnet build
 ```
 
----
-
 ### 🚀 Run Options
 
 #### 🧪 Run from Visual Studio 2022
 1. Open the solution in Visual Studio 2022.
 2. Set `RaftLabs.ConsoleApp` as the startup project.
 3. Press **F5** (Debug) or **Ctrl + F5** (Run).
-   - The app uses `launchSettings.json` with default argument `0` (fetch all users).
+   - The app uses `launchSettings.json` with the default argument `0` (fetch all users).
 
 #### 💻 Run from Command Line
 ```bash
@@ -113,10 +107,7 @@ dotnet run --project src/RaftLabs.ConsoleApp -- 3
 
 #### 📦 Publish and Run
 ```bash
-# Publish the app
 dotnet publish src/RaftLabs.ConsoleApp -c Release -o ./publish
-
-# Run the published executable with an argument
 ./publish/RaftLabs.ConsoleApp.exe 5   # Fetch user with ID 5
 ```
 
@@ -128,13 +119,73 @@ dotnet publish src/RaftLabs.ConsoleApp -c Release -o ./publish
 dotnet test
 ```
 
-Unit tests cover:
+Covers:
 - Pagination and full user list retrieval
 - Individual user fetch with caching
 - Mapping correctness and error handling
 
 ---
 
+## 🖥️ Sample Output
+
+Example console output when fetching user ID 2:
+
+```json
+info: RaftLabs.ConsoleApp.Demo.LaunchDemo[0]
+      User with ID 2:
+      {
+        "id": 2,
+        "email": "janet.weaver@reqres.in",
+        "first_name": "Janet",
+        "last_name": "Weaver",
+        "avatar": "https://reqres.in/img/faces/2-image.jpg"
+      }
+```
+
+---
+
+## 🛑 Error Handling Behavior
+
+- Invalid user ID (e.g. `dotnet run -- 99`) logs:
+```
+error: RaftLabs.ConsoleApp.Demo.LaunchDemo[0]
+       UserNotFoundException: User with ID 99 not found.
+```
+- Network failure or API error logs:
+```
+error: ExternalServiceException: Failed to connect to external service.
+```
+
+---
+
+## 🎯 Design Decisions
+
+| Area                 | Decision & Justification                                                                 |
+|----------------------|-------------------------------------------------------------------------------------------|
+| **Architecture**     | Adopted Clean Architecture to ensure modularity, scalability, and clear separation of concerns. |
+| **HttpClient usage** | Used `IHttpClientFactory` to avoid socket exhaustion and to integrate Polly handlers effectively. |
+| **Resilience**       | Applied Polly policies — retry (with exponential backoff), circuit breaker, and timeout — to handle transient API failures gracefully. |
+| **Caching**          | Used `IMemoryCache` with a 10-minute sliding expiration to minimize redundant API calls while keeping data fresh. |
+| **Configuration**    | Externalized API and resilience settings using the `IOptions<T>` pattern to allow future changes without code edits. |
+| **Mapping**          | Used AutoMapper to abstract repetitive DTO → domain conversions and configured it globally for maintainability. |
+| **Snake_case Support** | Implemented a custom `SnakeCaseNamingPolicy` to ensure compatibility with the API's JSON format. |
+| **Testability**      | All services and external dependencies (e.g., API client) were injected via interfaces, enabling mocking in unit tests. |
+| **CLI Integration**  | Used `launchSettings.json` and `commandLineArgs` to simplify run/debug configuration for developers. |
+
+---
+
+## 📽️ Video Demo Link
+
+🎥 [Watch the walkthrough demo here](https://1drv.ms/v/c/db96032a15e8bebe/EeE3VF09j-ZOsUA8AezpQvkBpgvHEwEH-GpMEQgQB-HZow?e=hGV0uj)
+
+---
+
 ## 📄 Credits
 
 This solution was developed as part of the **[RaftLabs .NET Developer Contractor Assignment (2025)](https://drive.google.com/file/d/1sBW0fx5QJhu7ZGnX7DtIZulpWBz3BP7S/view?usp=sharing)** and utilizes the [reqres.in](https://reqres.in) API for demonstration purposes only.
+
+---
+
+## ⚖️ License
+
+For evaluation and demonstration purposes only.
